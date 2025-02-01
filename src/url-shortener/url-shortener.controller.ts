@@ -14,7 +14,7 @@ import { UrlShortenerService } from './url-shortener.service';
 import { CreateShortenedUrlDto } from './dto/create-url-shortener.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@Controller('urls')
+@Controller('')
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) {}
 
@@ -28,7 +28,7 @@ export class UrlShortenerController {
     return {
       originalUrl: shortenedUrl.originalUrl,
       shortCode: shortenedUrl.shortCode,
-      shortUrl: `${process.env.APP_URL}/urls/${shortenedUrl.shortCode}`,
+      shortUrl: `${process.env.APP_URL}/${shortenedUrl.shortCode}`,
       clicks: shortenedUrl.clicks,
     };
   }
@@ -51,7 +51,7 @@ export class UrlShortenerController {
       id: url._id,
       originalUrl: url.originalUrl,
       shortCode: url.shortCode,
-      shortUrl: `${process.env.APP_URL}/urls/${url.shortCode}`,
+      shortUrl: `${process.env.APP_URL}/${url.shortCode}`,
       clicks: url.clicks,
       createdAt: url.createdAt,
     }));
