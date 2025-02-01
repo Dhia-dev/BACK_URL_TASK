@@ -64,7 +64,7 @@ describe('AppController (e2e)', () => {
 
     it('should create shortened URL', async () => {
       const response = await request(app.getHttpServer())
-        .post('/api/urls')
+        .post('/api')
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
           originalUrl: 'https://example.com',
@@ -77,7 +77,7 @@ describe('AppController (e2e)', () => {
 
     it("should get user's URLs", async () => {
       await request(app.getHttpServer())
-        .get('/api/urls')
+        .get('/api')
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(200)
         .expect((res) => {
@@ -90,7 +90,7 @@ describe('AppController (e2e)', () => {
 
       if (url) {
         await request(app.getHttpServer())
-          .get(`/api/urls/${shortCode}`)
+          .get(`/api/${shortCode}`)
           .expect(302)
           .expect('Location', 'https://example.com');
       } else {

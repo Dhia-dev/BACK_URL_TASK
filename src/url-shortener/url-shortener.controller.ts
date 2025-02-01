@@ -12,7 +12,7 @@ import {
 import { UrlShortenerService } from './url-shortener.service';
 
 import { CreateShortenedUrlDto } from './dto/create-url-shortener.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('')
 export class UrlShortenerController {
