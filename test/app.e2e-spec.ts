@@ -51,12 +51,11 @@ describe('AppController (e2e)', () => {
         email: 'test@test.com',
         password: 'password123',
       })
-      .expect(201); // Changé de 200 à 201 pour correspondre à votre contrôleur
+      .expect(201);
 
     jwtToken = response.body.token;
     expect(jwtToken).toBeDefined();
 
-    // Debug pour voir la réponse
     console.log('Login response:', response.body);
   });
 
@@ -87,7 +86,6 @@ describe('AppController (e2e)', () => {
     });
 
     it('should redirect to original URL', async () => {
-      // Assurez-vous d'abord qu'une URL existe
       const url = await urlModel.findOne({ shortCode }).exec();
 
       if (url) {
