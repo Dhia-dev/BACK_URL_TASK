@@ -60,12 +60,24 @@ export class UrlShortenerService {
     }
   }
 
-  async findAllByUser(userId: string): Promise<ShortenedUrl[]> {
+  async findAllByUser(
+    userId: string,
+    skip: number,
+    limit: number,
+  ): Promise<[ShortenedUrl[], number]> {
     try {
-      return await this.urlModel
+      const urls = await this.urlModel
         .find({ creator: userId })
         .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
         .exec();
+
+      const total = await this.urlModel
+        .countDocuments({ creator: userId })
+        .exec();
+
+      return [urls, total];
     } catch (error) {
       this.logger.error(`Error fetching URLs for user ${userId}:`, error);
       throw error;

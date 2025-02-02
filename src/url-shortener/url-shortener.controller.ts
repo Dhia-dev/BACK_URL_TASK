@@ -9,6 +9,7 @@ import {
   Redirect,
   NotFoundException,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 
@@ -80,16 +81,35 @@ export class UrlShortenerController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Successfully retrieved URLs.' })
   @ApiResponse({ status: 404, description: 'No URLs found.' })
-  async findAll(@Request() req) {
-    const urls = await this.urlShortenerService.findAllByUser(req.user._id);
-    return urls.map((url) => ({
-      id: url._id,
-      originalUrl: url.originalUrl,
-      shortCode: url.shortCode,
-      shortUrl: `${process.env.APP_URL}/${url.shortCode}`,
-      clicks: url.clicks,
-      createdAt: url.createdAt,
-    }));
+  async findAll(
+    @Request() req,
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+  ) {
+    page = Number(page) > 0 ? Number(page) : 1;
+    limit = Number(limit) > 0 ? Number(limit) : 5;
+
+    const skip = (page - 1) * limit;
+    const [urls, total] = await this.urlShortenerService.findAllByUser(
+      req.user._id,
+      skip,
+      limit,
+    );
+
+    return {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      data: urls.map((url) => ({
+        id: url._id,
+        originalUrl: url.originalUrl,
+        shortCode: url.shortCode,
+        shortUrl: `${process.env.APP_URL}/${url.shortCode}`,
+        clicks: url.clicks,
+        createdAt: url.createdAt,
+      })),
+    };
   }
 
   @UseGuards(JwtAuthGuard)
