@@ -20,6 +20,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 
@@ -79,6 +80,8 @@ export class UrlShortenerController {
     summary: 'Get all shortened URLs for the authenticated user',
   })
   @ApiBearerAuth('access-token')
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'Successfully retrieved URLs.' })
   @ApiResponse({ status: 404, description: 'No URLs found.' })
   async findAll(
