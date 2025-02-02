@@ -123,4 +123,24 @@ export class UrlShortenerService {
     this.logger.error('Error finding short URL:', error);
     throw error;
   }
+  async deleteUrl(shortCode: string, userId: string): Promise<void> {
+    try {
+      const url = await this.urlModel
+        .findOne({
+          shortCode,
+          creator: userId,
+        })
+        .exec();
+
+      if (!url) {
+        throw new NotFoundException('URL not found or unauthorized');
+      }
+
+      await this.urlModel.deleteOne({ _id: url._id }).exec();
+      this.logger.log(`URL deleted successfully: ${shortCode}`);
+    } catch (error) {
+      this.logger.error(`Error deleting URL ${shortCode}:`, error);
+      throw error;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import {
   Request,
   Redirect,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 
@@ -69,5 +70,11 @@ export class UrlShortenerController {
       originalUrl: url.originalUrl,
       createdAt: url.createdAt,
     };
+  }
+  @UseGuards(JwtAuthGuard)
+  @Delete(':shortCode')
+  async delete(@Param('shortCode') shortCode: string, @Request() req) {
+    await this.urlShortenerService.deleteUrl(shortCode, req.user._id);
+    return { message: 'URL deleted successfully' };
   }
 }
